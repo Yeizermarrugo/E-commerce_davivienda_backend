@@ -30,8 +30,8 @@ exports.handler = async (event) => {
 		return {
 			statusCode: 200,
 			headers: {
-				"Access-Control-Allow-Origin": "*", // Permite cualquier origen (desarrollo)
-				"Access-Control-Allow-Methods": "POST, OPTIONS", // Métodos permitidos
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
 				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
 			},
 			body: JSON.stringify({
