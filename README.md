@@ -284,15 +284,3 @@ git push --tags nuevo
 -   Documenta endpoints y cambios en `docs/`
 
 ---
-
-## 📄 Licencia
-
-Indica la licencia que prefieras (ej. MIT) o reemplaza por la que te pidan en la entrega.
-
----
-
-## 📞 Contacto
-
-Mantén un archivo CONTRIBUTE.md o un issue template si necesitas feedback del profesor o compañeros.
-
-Gracias por revisar este backend — si quieres lo dejo listo en el repo (`README.md`) con ejemplos de cURL más detallados, o genero el `deploy.yml` y la estructura `terraform/` completa para que puedas commitear de una.
