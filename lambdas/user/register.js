@@ -21,6 +21,11 @@ exports.handler = async (event) => {
 	if (!name || !email || !password || !phone) {
 		return {
 			statusCode: 400,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
 			body: JSON.stringify({ message: "Todos los campos son obligatorios" })
 		};
 	}
