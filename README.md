@@ -236,7 +236,7 @@ Recomendación: usa roles con permisos mínimos y evita usar credenciales de roo
 
 ## 🧪 Pruebas y verificación
 
--   Test unitarios recomendados por lambda: funciones puras (validación, cálculo total, etc.)
+-   Test unitarios recomendados por lambda: funciones puras (validación,  etc.)
 -   Pruebas de integración: invocar endpoints contra un entorno de staging
 -   Ver logs en CloudWatch para depurar Lambdas
 
@@ -248,31 +248,6 @@ Recomendación: usa roles con permisos mínimos y evita usar credenciales de roo
 -   Carpeta `terraform/` con la infraestructura
 -   `src/lambdas/` con las funciones (o enlaces a implementaciones)
 -   Video demostrativo mostrando registro, login, creación de producto y checkout
-
----
-
-## 🛠️ Comandos útiles
-
-Ver remotes:
-
-```bash
-git remote -v
-```
-
-Crear repo y push inicial con GitHub CLI:
-
-```bash
-gh auth login
-gh repo create Yeizermarrugo/NOMBRE_REPO --private --source=. --remote=origin --push
-```
-
-Push a un remote existente sin perder commits:
-
-```bash
-git remote add nuevo https://github.com/Yeizermarrugo/NOMBRE_REPO.git
-git push --all nuevo
-git push --tags nuevo
-```
 
 ---
 
