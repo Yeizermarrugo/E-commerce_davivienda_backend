@@ -91,7 +91,7 @@ exports.handler = async (event) => {
 	const productCounts = {};
 	for (const prod of products) {
 		const key = `${prod.id}||${prod.name}`;
-		productCounts[key] = (productCounts[key] || 0) + 1;
+		productCounts[key] = (productCounts[key] || 0) + +(prod.qty || 1);
 	}
 
 	// Validar stock de cada producto
