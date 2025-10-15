@@ -1,6 +1,6 @@
 # E-commerce Backend — Parcial 3er Corte
 
-Bienvenido al backend de la tienda de electrodomésticos. Este repositorio implementa una API serverless pensada para un flujo de compra simple y seguro: autenticación, CRUD de productos, carrito y checkout. Integra AWS Lambda, API Gateway, DynamoDB, Terraform para la infraestructura y GitHub Actions para CI/CD.
+Bienvenido al backend de la tienda de tecnologias. Este repositorio implementa una API serverless pensada para un flujo de compra simple y seguro: autenticación, CRUD de productos, carrito y checkout. Integra AWS Lambda, API Gateway, DynamoDB, Terraform para la infraestructura y GitHub Actions para CI/CD.
 
 ---
 
