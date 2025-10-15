@@ -29,8 +29,7 @@ Bienvenido al backend de la tienda de tecnologias. Este repositorio implementa u
 -   Amazon DynamoDB
 -   Terraform
 -   GitHub Actions
--   Node.js / Python (esqueleto de lambdas; adapta según tu implementación)
--   jq, curl (para ejemplos)
+-   Node.js
 
 ---
 
@@ -41,7 +40,6 @@ Bienvenido al backend de la tienda de tecnologias. Este repositorio implementa u
 -   .github/workflows/ — workflow de CI/CD (deploy.yml)
 -   README.md — este archivo
 -   .gitignore
--   docs/ — documentación adicional (opcional)
 
 ---
 
@@ -286,15 +284,3 @@ git push --tags nuevo
 -   Documenta endpoints y cambios en `docs/`
 
 ---
-
-## 📄 Licencia
-
-Indica la licencia que prefieras (ej. MIT) o reemplaza por la que te pidan en la entrega.
-
----
-
-## 📞 Contacto
-
-Mantén un archivo CONTRIBUTE.md o un issue template si necesitas feedback del profesor o compañeros.
-
-Gracias por revisar este backend — si quieres lo dejo listo en el repo (`README.md`) con ejemplos de cURL más detallados, o genero el `deploy.yml` y la estructura `terraform/` completa para que puedas commitear de una.
