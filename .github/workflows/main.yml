@@ -20,9 +20,9 @@ jobs:
               run: |
                   cd lambdas/user
                    npm install || true                 # si hay package.json
-                   zip -r register.zip register.js auth/ utils/ node_modules/ package.json
+                   zip -r register.zip register.js node_modules/ package.json
                    zip -r confirm.zip confirm.js node_modules/ package.json
-                   zip -r login.zip login.js auth/ utils/ node_modules/ package.json
+                   zip -r login.zip login.js node_modules/ package.json
                    mv register.zip ../../terraform/
                    mv confirm.zip ../../terraform/
                    mv login.zip ../../terraform/
