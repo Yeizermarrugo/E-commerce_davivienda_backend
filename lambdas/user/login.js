@@ -1,6 +1,4 @@
 // login lambda function
-const Auth = require("aws-amplify");
-const AuthService = require("./auth/auth.service");
 const { CognitoIdentityProviderClient, InitiateAuthCommand } = require("@aws-sdk/client-cognito-identity-provider");
 
 const client = new CognitoIdentityProviderClient({ region: "us-west-1" });

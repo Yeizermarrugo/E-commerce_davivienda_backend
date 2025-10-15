@@ -27,8 +27,6 @@ exports.handler = async (event) => {
 	try {
 		user = await validateToken(token);
 		event.user = user;
-		console.log("decoded: ", JSON.stringify(user));
-		console.log("event: ", JSON.stringify(event));
 	} catch (err) {
 		return {
 			statusCode: 401,
