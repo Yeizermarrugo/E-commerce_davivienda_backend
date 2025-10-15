@@ -1,0 +1,35 @@
+{
+    "name": "user",
+    "version": "1.0.0",
+    "main": "register.js",
+    "dependencies": {
+        "@aws-sdk/client-cognito-identity-provider": "^3.817.0",
+        "aws-amplify": "^6.14.4",
+        "aws-sdk": "^2.1692.0",
+        "bcrypt": "^6.0.0",
+        "buffer-equal-constant-time": "^1.0.1",
+        "dotenv": "^16.5.0",
+        "ecdsa-sig-formatter": "^1.0.11",
+        "jsonwebtoken": "^9.0.2",
+        "jwa": "^1.4.2",
+        "jws": "^3.2.2",
+        "lodash.includes": "^4.3.0",
+        "lodash.isboolean": "^3.0.3",
+        "lodash.isinteger": "^4.0.4",
+        "lodash.isnumber": "^3.0.3",
+        "lodash.isplainobject": "^4.0.6",
+        "lodash.isstring": "^4.0.1",
+        "lodash.once": "^4.1.1",
+        "ms": "^2.1.3",
+        "safe-buffer": "^5.2.1",
+        "semver": "^7.7.2",
+        "uuid": "^11.1.0"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": ""
+}

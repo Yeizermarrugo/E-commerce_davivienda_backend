@@ -1,0 +1,148 @@
+name: Deploy Lambdas
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18"
+
+            # Instalar dependencias y crear ZIPS para cada Lambda
+            - name: Build User Lambdas
+              run: |
+                  cd lambdas/user
+                   npm install || true                 # si hay package.json
+                   zip -r register.zip register.js auth/ utils/ node_modules/ package.json
+                   zip -r confirm.zip confirm.js node_modules/ package.json
+                   zip -r login.zip login.js auth/ utils/ node_modules/ package.json
+                   mv register.zip ../../terraform/
+                   mv confirm.zip ../../terraform/
+                   mv login.zip ../../terraform/
+            - name: Build Product Lambdas
+              run: |
+                  cd lambdas/product
+                  npm install || true                 # si hay package.json
+                  zip -r get.zip get.js node_modules/ package.json
+                  zip -r validate.zip validate.js node_modules/ package.json
+                  zip -r post.zip post.js middleware/ node_modules/ package.json
+                  mv get.zip ../../terraform/
+                  mv validate.zip ../../terraform/
+                  mv post.zip ../../terraform/
+
+                  # Terraform Init/Plan/Apply
+            - name: Build Cart Lambdas
+              run: |
+                  cd lambdas/cart
+                  npm install || true                 # si hay package.json
+                  zip -r purchase.zip purchase.js middleware/ node_modules/ package.json
+                  mv purchase.zip ../../terraform/
+
+                  # Terraform Init/Plan/Apply
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+
+            - name: Terraform Import existing resources
+              run: |
+                  terraform init
+
+                  # DynamoDB
+                  terraform import aws_dynamodb_table.users users || true
+                  terraform import aws_dynamodb_table.products products || true
+                  terraform import aws_dynamodb_table.cart cart || true
+
+                  # IAM Role
+                  terraform import aws_iam_role.lambda-exec-role lambda-exec-role || true
+
+                  # API Gateway
+                  terraform import aws_api_gateway_rest_api.ecommerce_api e6j63pv6n2 || true
+
+                  # Cognito
+                  terraform import aws_cognito_user_pool.main us-west-1_CrvEqwx5X || true
+
+                  # Lambda Functions
+                  terraform import aws_lambda_function.user_register user-register || true
+                  terraform import aws_lambda_function.user_confirm user-confirm || true
+                  terraform import aws_lambda_function.user_login user-login || true
+                  terraform import aws_lambda_function.get_products product-get || true
+                  terraform import aws_lambda_function.products_validate product-validate || true
+                  terraform import aws_lambda_function.post_products product-post || true
+                  terraform import aws_lambda_function.purchase_cart cart-purchase || true
+
+
+                  # IAM Policies
+                  terraform import aws_iam_policy.dynamodb_put_users arn:aws:iam::654654158705:policy/dynamodb-put-users-policy || true
+                  terraform import aws_iam_policy.dynamodb_get_users arn:aws:iam::654654158705:policy/dynamodb-get-users-policy || true
+                  terraform import aws_iam_policy.dynamodb_read_products arn:aws:iam::654654158705:policy/dynamodb-read-products-policy || true
+                  terraform import aws_iam_policy.dynamodb_post_products arn:aws:iam::654654158705:policy/dynamodb-post-products-policy || true
+                  terraform import aws_iam_policy.dynamodb_update_products arn:aws:iam::654654158705:policy/dynamodb-update-products-policy || true
+                  terraform import aws_iam_policy.dynamodb_purchase_products arn:aws:iam::654654158705:policy/dynamodb-purchase-products-policy || true
+
+                  terraform import aws_iam_role_policy_attachment.lambda_basic_execution lambda-exec-role/arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole || true
+                  terraform import aws_iam_role_policy.allow_invoke_validate_lambda lambda-exec-role:allow-invoke-validate-lambda || true
+
+                  # API Gateway sub-resources
+                  terraform import aws_api_gateway_resource.register_user e6j63pv6n2/7du8vf || true
+                  terraform import aws_api_gateway_resource.confirm_user e6j63pv6n2/kbpgcq || true
+                  terraform import aws_api_gateway_resource.login_user e6j63pv6n2/l6iq4f || true
+                  terraform import aws_api_gateway_resource.products e6j63pv6n2/5rwj1w || true
+                  terraform import aws_api_gateway_resource.products_validate e6j63pv6n2/6lwck5 || true
+                  terraform import aws_api_gateway_resource.purchase_cart e6j63pv6n2/0w8rri || true
+
+                  # API Gateway methods
+                  terraform import aws_api_gateway_method.register_user e6j63pv6n2/7du8vf/POST || true
+                  terraform import aws_api_gateway_method.confirm_user e6j63pv6n2/kbpgcq/POST || true
+                  terraform import aws_api_gateway_method.login_user e6j63pv6n2/l6iq4f/POST || true
+                  terraform import aws_api_gateway_method.get_products e6j63pv6n2/5rwj1w/GET || true
+                  terraform import aws_api_gateway_method.post_products e6j63pv6n2/5rwj1w/POST || true
+                  terraform import aws_api_gateway_method.get_products_validate e6j63pv6n2/6lwck5/GET || true
+                  terraform import aws_api_gateway_method.post_purchase_cart e6j63pv6n2/0w8rri/POST || true
+
+                  # API Gateway Authorizer
+                  terraform import aws_api_gateway_authorizer.cognito e6j63pv6n2/621sjw || true
+
+                  # Lambda Permissions
+                  terraform import aws_lambda_permission.allow_api_gateway_register_user user-register/AllowExecutionFromAPIGatewayRegisterUser || true
+                  terraform import aws_lambda_permission.allow_api_gateway_confirm_user user-confirm/AllowExecutionFromAPIGatewayConfirmUser || true
+                  terraform import aws_lambda_permission.allow_api_gateway_login_user user-login/AllowExecutionFromAPIGatewayLoginUser || true
+                  terraform import aws_lambda_permission.allow_api_gateway_get_products product-get/AllowExecutionFromAPIGatewayProducts || true
+                  terraform import aws_lambda_permission.allow_api_gateway_post_products product-post/AllowExecutionFromAPIGatewayProductsPost || true
+                  terraform import aws_lambda_permission.allow_api_gateway_get_products_validate product-validate/AllowExecutionFromAPIGatewayProductsValidate || true
+                  terraform import aws_lambda_permission.allow_api_gateway_purchase_cart cart-purchase/AllowExecutionFromAPIGatewayCartPost || true
+
+              working-directory: terraform
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+            - name: List files in terraform directory
+              run: ls -l
+              working-directory: terraform
+
+            - name: Terraform Init
+              run: terraform init
+              working-directory: terraform
+
+            - name: Terraform Plan
+              run: terraform plan
+              working-directory: terraform
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+            - name: Terraform Apply
+              run: terraform apply -auto-approve
+              working-directory: terraform
+              env:
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}

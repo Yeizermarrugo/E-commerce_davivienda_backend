@@ -1,0 +1,19 @@
+feat(infra,backend,ci,docs): inicializar e-commerce — Terraform, Lambdas, API y CI/CD
+
+- terraform/: archivos iniciales (variables.tf, main.tf) que configuran provider AWS (us-west-1),
+  tablas DynamoDB (users, products, cart) y rol IAM para Lambdas con permisos mínimos necesarios.
+- .github/workflows/deploy.yml: workflow que realiza terraform init/validate/plan/apply en pushes a main,
+  usando secrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY y AWS_REGION.
+- src/lambdas/: esqueleto de funciones Lambda (user_register, user_login, product_create,
+  product_list, cart_create) con handlers básicos y README corto por función.
+- README.md: documentación completa del API (endpoints, bodies, respuestas), descripción del proyecto,
+  instrucciones de despliegue, secretos necesarios y buenas prácticas (SOLID, DRY, tests).
+- .gitignore y otros archivos de configuración (ej. .env.example) para facilitar despliegue local.
+- Scripts y notas para despliegues manuales y con GitHub Actions; recomendación de backend remoto de TF
+  (S3/DynamoDB) y uso de roles con permisos limitados.
+
+Notas:
+- No se incluyen valores de secretos en el repo. Antes de ejecutar el workflow configura los secrets:
+  AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, JWT_SECRET (si aplica).
+- Este commit marca la base del proyecto; después conviene endurecer políticas IAM a los ARNs
+  de las tablas en lugar de usar comodines y completar las implementaciones de las lambdas y pruebas.
