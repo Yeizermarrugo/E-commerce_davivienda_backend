@@ -7,13 +7,10 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 const PRODUCTS_TABLE = process.env.PRODUCTS_TABLE || "products";
 const VALIDATE_LAMBDA_NAME = process.env.VALIDATE_LAMBDA_NAME;
 
-console.log("VALIDATE_LAMBDA_NAME: ", VALIDATE_LAMBDA_NAME);
 
 exports.handler = async (event) => {
 	// Extrae y valida el token de autorización
-	console.log("event: ", JSON.stringify(event));
 	const authHeader = event.headers?.Authorization || event.headers?.authorization;
-	console.log("authHeader: ", JSON.stringify(authHeader));
 	if (!authHeader) {
 		return {
 			statusCode: 401,
@@ -24,12 +21,9 @@ exports.handler = async (event) => {
 	}
 	let user;
 	const token = authHeader.replace("Bearer ", "");
-	console.log("token: ", token);
 	try {
 		user = await validateToken(token);
 		event.user = user;
-		console.log("decoded: ", JSON.stringify(user));
-		console.log("event: ", JSON.stringify(event));
 	} catch (err) {
 		return {
 			statusCode: 401,
@@ -51,7 +45,6 @@ exports.handler = async (event) => {
 			};
 		}
 	}
-	console.log("body", JSON.stringify(body));
 	const { name, brand, price, stock, description } = body || {};
 
 	if (!name || !brand || !price) {
@@ -73,7 +66,7 @@ exports.handler = async (event) => {
 
 		const validation = JSON.parse(validateResult.Payload);
 		console.log("validation: ", validation);
-		// Si la Lambda de validación retorna error, propágalo
+		// Si la Lambda de validación retorna error, se propaga
 		if (validateResult.StatusCode !== 200) {
 			return {
 				statusCode: validation.statusCode || 500,

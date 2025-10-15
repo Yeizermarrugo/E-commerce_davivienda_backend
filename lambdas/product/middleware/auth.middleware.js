@@ -39,7 +39,7 @@ const verifyToken = async (token) => {
 	});
 };
 
-// Middleware friendly: recibe solo token
+// Middleware: recibe solo token
 module.exports.validateToken = async (token) => {
 	if (!token) {
 		throw new Error("No se proporcionó un token de autorización");
