@@ -4,6 +4,16 @@ const { createUser } = require("./auth/auth.service");
 const client = new CognitoIdentityProviderClient({ region: "us-west-1" });
 
 exports.handler = async (event) => {
+	if (event.httpMethod === "OPTIONS") {
+		return {
+			statusCode: 204,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			}
+		};
+	}
 	const body = JSON.parse(event.body);
 	const { email, password, phone, name } = body;
 
@@ -35,6 +45,11 @@ exports.handler = async (event) => {
 
 		return {
 			statusCode: 201,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
 			body: JSON.stringify({ message: "Usuario registrado", userSub: result.UserSub })
 		};
 	} catch (error) {
