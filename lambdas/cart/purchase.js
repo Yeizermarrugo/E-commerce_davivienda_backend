@@ -13,6 +13,11 @@ exports.handler = async (event) => {
 	if (!authHeader) {
 		return {
 			statusCode: 401,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
 			body: JSON.stringify({ message: "No autorizado. Falta token." })
 		};
 	}
@@ -27,6 +32,11 @@ exports.handler = async (event) => {
 	} catch (err) {
 		return {
 			statusCode: 401,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
 			body: JSON.stringify({ message: "Token inválido", error: err.message })
 		};
 	}
@@ -38,6 +48,11 @@ exports.handler = async (event) => {
 		} catch {
 			return {
 				statusCode: 400,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+				},
 				body: JSON.stringify({ message: "Body inválido, no es JSON válido." })
 			};
 		}
@@ -48,11 +63,27 @@ exports.handler = async (event) => {
 
 	// Cambios aquí: requerimos id y name por cada producto
 	if (!Array.isArray(products) || typeof total !== "number") {
-		return { statusCode: 400, body: JSON.stringify({ message: "Invalid request body" }) };
+		return {
+			statusCode: 400,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
+			body: JSON.stringify({ message: "Invalid request body" })
+		};
 	}
 	for (const prod of products) {
 		if (!prod.id || !prod.name) {
-			return { statusCode: 400, body: JSON.stringify({ message: "Product id or name missing" }) };
+			return {
+				statusCode: 400,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+				},
+				body: JSON.stringify({ message: "Product id or name missing" })
+			};
 		}
 	}
 
@@ -73,10 +104,24 @@ exports.handler = async (event) => {
 			})
 			.promise();
 		const product = getRes.Item;
-		if (!product) return { statusCode: 404, body: JSON.stringify({ message: `Product not found: ${id}` }) };
+		if (!product)
+			return {
+				statusCode: 404,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+				},
+				body: JSON.stringify({ message: `Product not found: ${id}` })
+			};
 		if (typeof product.stock !== "number" || product.stock < qty) {
 			return {
 				statusCode: 400,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+				},
 				body: JSON.stringify({
 					message: `Not enough stock for product ${id}`,
 					available: product.stock || 0
@@ -103,11 +148,21 @@ exports.handler = async (event) => {
 		if (err.code === "ConditionalCheckFailedException") {
 			return {
 				statusCode: 400,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Methods": "POST, OPTIONS",
+					"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+				},
 				body: JSON.stringify({ message: "No hay suficiente stock para uno de los productos." })
 			};
 		}
 		return {
 			statusCode: 500,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
 			body: JSON.stringify({ message: "Internal server error (update stock)", error: err.message })
 		};
 	}
@@ -131,6 +186,11 @@ exports.handler = async (event) => {
 
 		return {
 			statusCode: 200,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
 			body: JSON.stringify({
 				products,
 				userId: user.sub,
@@ -140,6 +200,11 @@ exports.handler = async (event) => {
 	} catch (err) {
 		return {
 			statusCode: 500,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+			},
 			body: JSON.stringify({ message: "Internal server error (cart)", error: err.message })
 		};
 	}
