@@ -1,8 +1,7 @@
 const { CognitoIdentityProviderClient, SignUpCommand } = require("@aws-sdk/client-cognito-identity-provider");
 const { createUser } = require("./auth/auth.service");
 
-// Opcional: configura región si es necesario
-const client = new CognitoIdentityProviderClient({ region: "us-west-1" }); // Cambia la región si aplica
+const client = new CognitoIdentityProviderClient({ region: "us-west-1" });
 
 exports.handler = async (event) => {
 	const body = JSON.parse(event.body);
@@ -19,19 +18,20 @@ exports.handler = async (event) => {
 
 	try {
 		const command = new SignUpCommand({
-			ClientId: process.env.USER_CLIENT_ID, // Pon tu app client id aquí o como variable de entorno
+			ClientId: process.env.USER_CLIENT_ID,
 			Username: email,
 			Password: password,
 			UserAttributes: [
 				{ Name: "email", Value: String(email) },
-				{ Name: "phone_number", Value: String(phone) }
+				{ Name: "phone_number", Value: String(phone) },
+				{ Name: "name", Value: String(name) }
 			]
 		});
 
 		const result = await client.send(command);
 
-		// Opcional: guarda los datos extra en DynamoDB si lo necesitas
-		const userData = await createUser(body);
+		// guarda los datos extra en DynamoDB si es necesario
+		// const userData = await createUser(body);
 
 		return {
 			statusCode: 201,
